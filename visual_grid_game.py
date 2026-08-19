@@ -43,15 +43,15 @@ class VisualGridHuntGame:
         self.toxic_traps = {(1, 3), (4, 2), (7, 6)}  # Avoid (0,0), walls, and food
 
     def get_percept(self) -> dict:
+        ax, ay = self.agent_pos
+        
+        # Local perception: Look at adjacent cells (Up, Down, Left, Right) __
+        wall_ahead = (ax, ay + 1) in self.walls if ay < self.height - 1 else True
+        
         return {
             'agent_pos': list(self.agent_pos),
-            'opponent_positions': [list(op) for op in self.opponents],
-            'smells_food': tuple(self.agent_pos) in self.food_positions,
-
-            'smells_toxin': tuple(self.agent_pos) in self.toxic_traps,
-
-            'hit_wall': tuple(self.agent_pos) in self.walls,
-            'collision': self.collision,
+            'wall_ahead': wall_ahead,
+            'food_here': tuple(self.agent_pos) in self.food_positions,
             'score': self.score,
             'remaining_food': len(self.food_positions)
         }
